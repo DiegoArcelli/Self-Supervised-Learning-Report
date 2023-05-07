@@ -1,0 +1,91 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsmath} 
+\usepackage{lmodern,adjustbox}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{physics}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+\usepackage{mathtools}\usepackage[a4paper, left = 2.5cm, right = 2.5cm, top = 3.5cm, bottom = 3.5cm ]{geometry}
+\usepackage{listings}
+\usepackage{mathtools} 
+\usepackage{extarrows} 
+
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proof}{Proof}[section]
+
+\begin{document}
+	
+	\begin{titlepage}
+		
+		\title{Self-Supervised Learning for pre-training models in Computer Vision \\ - \\ Continual Learning Report}
+		\author{Diego Arcelli}
+		\maketitle
+		\centering
+		\includegraphics[width=10cm]{./images/unipi_logo.png}
+		
+	\end{titlepage}
+	
+	\tableofcontents
+	\newpage
+	
+	\begin{abstract}
+	\noindent In this work some self-supervised learning methods for computer vision will be explored. In the first part the general framework of self-supervised learning will be discussed, describing all the aspects which are in common to the methods that will be explained. After five different self-supervised learning methods will be described in detail and in the final part of the work those methods will be compared, both in term of performances and in the way they address some specific problems, exposing strengths and weaknesses of each method.
+	\end{abstract}
+	
+	\section{Introduction}
+	Self-Supervised Learning (SSL) is a particular machine learning technique that enables model to learn from unlabeled data by self-generating the labels from the input patterns, usually requiring the model to predict or reconstruct some aspect of the input. The main objective of SSL is to pre-train a model on a large dataset using these self-generated labels, which allows the model to learn a meaningful and useful representation of the input data. This pre-trained model can then be fine-tuned on downstream tasks with smaller labeled datasets, hopefully leading to improved performance and faster convergence compared to training the model from scratch. By learning a useful representation of the input, the pre-trained model can extract relevant features and patterns that are beneficial for the downstream tasks, even if the labeled dataset is different from the original unlabeled dataset used for pre-training. SSL has the advantages of requiring less labeled data, which are usually hard to acquire, enabling to learn from unlabeled data, which are easier to get. Moreover the same pre-trained model might be used for many downstream tasks. 
+	
+	SSL gained a lot of popularity in the field of natural language process, where pre-training large language models on pretext tasks such as masked language modeling or next sentence prediction, allowed to reach remarkable performance on many downstream tasks. In this work some techniques for performing SSL for computer vision tasks will be analyzed, discussed and compared.
+	
+	\section{Problem setting}
+	As explained in the previous section we will consider SSL for computer vision tasks. In general when we train a self-supervised model there are two main stages:
+	\begin{itemize}
+		\item[--] \textbf{Pretext task}: which is the self-supervised task that is used to pre-train the model. The goal of this task is to learn a good intermediate representation with the expectation that this representation can carry good semantic or structural meanings and can be beneficial for many downstream tasks.
+		\item[--] \textbf{Downstream task}: which is the supervised task (such as image classification or object detection) on which we want to evaluate the model. In this stage the pre-trained model is used as a starting point, and the weights are adjusted through supervised training on the downstream task, using labeled data.
+	\end{itemize}
+	In general we don't care about the performances of the model in the pretext task, and we just care about the performances on the downstream tasks. When fine-tuning the model on the downstream task, usually a classifier (typically an MLP) is added at the end of the feature extractor learned during the pre-training, and it is trained to perform the supervised task. In general for the fine-tuning we can:
+	\begin{itemize}
+		\item[--] Train the parameters of the whole architecture
+		\item[--] Freeze the parameters of the feature extractor and only train the weights of the MLP head
+		\item[--] Freeze the parameters of the first $K$ layers of the feature extractor and train the weights of the rest of the architecture
+	\end{itemize}
+	All the methods that we'll explore exploit two fundamental concepts for SSL in computer vision: data augmentation and contrastive learning. As we already said in SSL we want to train a model using unlabeled data to predict some properties of the data. In the textual domain this is usually done by masking some words in a sentence and training the model to predict those words. In computer vision one possible way of doing is by taking an image, producing different views of that image by applying to each view a different set of transformations, and consider views produced from the same image to belong to the same class. In this way we can train a model that takes in input two views to predict if they come from the same image or not. We define a couple of images to be a positive pair if they are different views of the same image, on the contrary we define the couple as a negative pair if the two images are views from different images. If we merge this idea of positive and negative pairs obtained with data augmentation, with the goal that we want to achieve with the pretext task, which is learning a latent representation of the images that carry semantic information of the images, we get the intuition is that the in the latent space two positive images should be close, while two negative images should be distant. This is the intuition behind contrastive learning, in which we train a model to produce a representation of the data using a loss the minimize in the latent space the distance between positive images and maximize the distance between negative images.
+	
+	
+	\section{Methodology}
+	
+	\subsection*{Contrastive Predicting Coding}
+	\input{cpc}
+	
+	\subsection*{Contrastive Multi-view Coding}
+	\input{cmc}
+	
+	\subsection*{Pre-text Invariant Representation Learning}
+	\input{pirl}
+	
+	\subsection*{Momentum Contrast}
+	\input{moco}
+	
+	\subsection*{Swapping Assignments between Multiple Views}
+	\input{swav}
+	
+	
+	\section{Analysis and comparison}
+	\input{comparison}
+	
+	
+	\section{Strength and weaknesses}
+	\section{Conclusion}
+	
+	\newpage
+	\bibliographystyle{unsrt}
+	\bibliography{bibliography}
+	
+
+	
+	
+	
+\end{document} 
