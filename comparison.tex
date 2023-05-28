@@ -67,8 +67,6 @@ In tables \ref{tab:classification-multi-dataset-linear} and \ref{tab:classificat
 	\label{tab:classification-multi-dataset-linear}
 \end{table}
 
-In table \ref{tab:object-detection} we report the results of the method using object detection as downstream task on the VOC dataset. The network used for the encoding is a Faster R-CNN FPN.
-
 \begin{table}[H]
 	\centering
 	\scalebox{0.6}{
@@ -84,9 +82,11 @@ In table \ref{tab:object-detection} we report the results of the method using ob
 	\end{tabular}
 	}
 	\caption{Result after fine-tuning on 1\% of the data of ImageNet}
-	\label{tab:object-detection}
+	\label{tab:classification-multi-dataset-finetune}
 \end{table}
+Even in these experiments SWAV performs slightly better than BYOL (even if in not all the datasets). SimCLR and MoCo have similar performances while PIRL performs significantly worse.
 
+In table \ref{tab:object-detection-swav} we report the results of the method using object detection as downstream task on the VOC dataset. The network used for the encoding is a Faster R-CNN FPN.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{l|ccc|ccc|}
@@ -104,6 +104,7 @@ In table \ref{tab:object-detection} we report the results of the method using ob
 	\caption{Result after fine-tuning on 1\% of the data of ImageNet}
 	\label{tab:object-detection-swav}
 \end{table}
+In this case is BYOL that performs slightly better than SWAV.
 
 \begin{comment}
 \begin{table}[H]
