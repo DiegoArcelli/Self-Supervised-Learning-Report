@@ -8,7 +8,7 @@
 \usepackage{physics}
 \usepackage{tikz}
 \usetikzlibrary{quantikz}
-\usepackage{mathtools}\usepackage[a4paper, left = 2.5cm, right = 2.5cm, top = 3.5cm, bottom = 3.5cm ]{geometry}
+\usepackage{mathtools}\usepackage[a4paper, left = 1.5cm, right = 1.5cm, top = 3.5cm, bottom = 3.5cm ]{geometry}
 \usepackage{listings}
 \usepackage{mathtools} 
 \usepackage{extarrows} 
@@ -33,13 +33,13 @@
 	\newpage
 	
 	\begin{abstract}
-	\noindent In this work some self-supervised learning methods for computer vision will be explored. In the first part the general framework of self-supervised learning will be discussed, describing all the aspects which are in common to the methods that will be explained. After five different self-supervised learning methods will be described in detail and in the final part of the work those methods will be compared, both in term of performances and in the way they address some specific problems, exposing strengths and weaknesses of each method.
+	\noindent In this work some self-supervised learning methods for computer vision will be explored. In the first part the general framework of self-supervised learning will be discussed, describing all the aspects which are in common to the methods that will be explained. After that five different self-supervised learning methods will be described in detail and in the final part of the work those methods will be compared, both in term of performances and in the way they address some specific problems, exposing strengths and weaknesses of each method.
 	\end{abstract}
 	
 	\section{Introduction}
-	Self-Supervised Learning (SSL) is a particular machine learning technique that enables model to learn from unlabeled data by self-generating the labels from the input patterns, usually requiring the model to predict or reconstruct some aspect of the input. The main objective of SSL is to pre-train a model on a large dataset using these self-generated labels, which allows the model to learn a meaningful and useful representation of the input data. This pre-trained model can then be fine-tuned on downstream tasks with smaller labeled datasets, hopefully leading to improved performance and faster convergence compared to training the model from scratch. By learning a useful representation of the input, the pre-trained model can extract relevant features and patterns that are beneficial for the downstream tasks, even if the labeled dataset is different from the original unlabeled dataset used for pre-training. SSL has the advantages of requiring less labeled data, which are usually hard to acquire, enabling to learn from unlabeled data, which are easier to get. Moreover the same pre-trained model might be used for many downstream tasks. 
+	Self-Supervised Learning (SSL) is a particular machine learning technique that enables models to learn from unlabeled data by self-generating the labels from the input patterns, usually requiring the model to predict or reconstruct some aspect of the input. The main objective of SSL is to pre-train a model on a large dataset using these self-generated labels, which allows the model to learn a meaningful and useful representation of the input data. This pre-trained model can then be fine-tuned on downstream tasks with a smaller labeled datasets, hopefully leading to improved performance and faster convergence compared to training the model from scratch. By learning a useful representation of the input, the pre-trained model can extract relevant features and patterns that are beneficial for the downstream tasks, even if the labeled dataset is different from the original unlabeled dataset used for pre-training. SSL has the advantages of requiring less labeled data, which are usually hard to acquire, enabling to learn from unlabeled data, which are easier to get. Moreover the same pre-trained model might be used for many downstream tasks. 
 	
-	SSL gained a lot of popularity in the field of natural language process, where pre-training large language models on pretext tasks such as masked language modeling or next sentence prediction, allowed to reach remarkable performance on many downstream tasks. In this work some techniques for performing SSL for computer vision tasks will be analyzed, discussed and compared.
+	SSL gained a lot of popularity in the field of natural language process, where pre-training large language models on pretext tasks, such as masked language modeling or next sentence prediction, allowed to reach remarkable performances on many downstream tasks. In this work some techniques to perform SSL in computer vision scenarios will be analyzed, discussed and compared.
 	
 	\section{Problem setting}
 	As explained in the previous section we will consider SSL for computer vision tasks. In general when we train a self-supervised model there are two main stages:

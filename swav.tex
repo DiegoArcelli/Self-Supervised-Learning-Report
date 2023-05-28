@@ -8,7 +8,7 @@ Swapping Assignments between Multiple Views (SWAV) \cite{caron2020unsupervised} 
 With SWAV the authors combine the main framework of contrastive learning, which is comparing different views of the images produced with augmentation, with a clustering based pretext task. SWAV works as follows: each image $x_n$ is transformed into an augmented view $x_{nt}$ by applying a transformation $t \sim \mathcal{T}$, where $\mathcal{T}$ is a set of augmentations. Then we map the augmented view to a vector representation with a non-linear mapping $f_\theta$ to $x_{nt}$ and we then project this feature in a unit sphere $z_{nt} = f_\theta(x_{nt})/\lVert f_\theta(x_{nt}) \rVert_2$. From this representation we compute the code $q_{nt}$ by mapping $z_{nt}$ to a set of $K$ trainable prototypes vectors $\{c_1, \dots, c_k\}$. We use $C$ to denote the matrix whose columns are the $c_1, \dots, c_k$ vectors. If we do the same thing with another augmentation $s \sim \mathcal{T}$, obtaining the image feature $z_{ns}$ and its corresponding code $q_{ns}$ then we can set a swapped prediction problem using the following loss:
 \[ L(z_{nt}, z_{ns}) = \ell(z_{nt}, q_{ns}) + \ell(z_{ns}, q_{nt}) \]
 where the function $\ell(z, q)$ measures the fit between features $z$ and the code $q$. The idea is that instead of comparing directly the features of $z_t$ and $z_s$, we do it using the intermediate codes $q_t$ and $q_s$. If these two features capture the same information, it should be possible to predict the code of the feature $z_q$ using the feature $z_t$ and vice versa. The loss $\ell(z_t, q_s)$ is the cross entropy loss between the code and the probability obtained by taking a soft-max of the dot product of $x_i$ and all the prototypes in $C$:
-\[\ell(x_t, q_s) = -\sum_k q_s^{(k)}\log p_t^{(k)}, \qquad p_t^{(k)} = \frac{\exp(z_t^Tc_k/\tau)}{\sum_{k^\prime}\exp(z_t^Tc_k^\prime/\tau)}\]
+\[\ell(z_t, q_s) = -\sum_k q_s^{(k)}\log p_t^{(k)}, \qquad p_t^{(k)} = \frac{\exp(z_t^Tc_k/\tau)}{\sum_{k^\prime}\exp(z_t^Tc_k^\prime/\tau)}\]
 by applying some mathematical manipulations to these formula we can obtain our objective: 
 \[\frac{1}{N}\sum_{n=1}^N \sum_{s, t \sim \mathcal{T}}L(z_{nt}, z_{ns}) = -\frac{1}{N}\sum_{n=1}^N \sum_{s, t \sim \mathcal{T}} \Bigg[ \frac{1}{\tau}z_{nt}^TCq_{ns} + \frac{1}{\tau}z_{ns}^TCq_{nt} - \log\sum_{i=1}^K\exp\Big(\frac{z_{nt}^Tc_k}{\tau}\Big) - \log\sum_{i=1}^K\exp\Big(\frac{z_{ns}^Tc_k}{\tau}\Big) \Bigg] \]
 so we can train the parameters $\theta$ of the encoding function $f_\theta(\cdot)$ to minimize this loss.
@@ -18,7 +18,7 @@ so we can train the parameters $\theta$ of the encoding function $f_\theta(\cdot
 	{\includegraphics[width=0.4\textwidth]{./images/swav_contrastive.png}}
 	\qquad
 	\subcaptionbox{SWAV framework}
-	{\includegraphics[width=0.4\textwidth]{./images/swav_contrastive.png}}
+	{\includegraphics[width=0.4\textwidth]{./images/swav_prediction.png}}
 	\caption{Difference between the classical contrastive learning framework with the one proposed in SWAV}
 
 \end{figure}
