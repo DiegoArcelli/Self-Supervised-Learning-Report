@@ -17,6 +17,12 @@ Then the authors proposed two different ways for extending the above defined fra
 \[ \mathcal{L}_C = \sum_{j=2}^{M} \mathcal{L}(V_1, V_j), \qquad \mathcal{L}_F = \sum_{j=1}^{M} \sum_{i=1}^{j-1} \mathcal{L}(V_i, V_j)\]
 If we have $M$ different views of a dataset $V_1, \dots, V_M$ in the core view formulation ($\mathcal{L}_C$) we select one view that we want to optimize, for instance $V_1$, and we build a pairwise representations between $V_1$ and all the other views. In the full graph formulation ($\mathcal{L}_F$) we instead consider all the possible pairs. The full graph formulation is more computational expensive but it has the advantage that it allows to capture more information between different views.
 
-In order to achieve good results using many negative examples in the contrastive loss, CMC uses a memory bank to store latent representations for each training sample, so that a certain amount of negative samples can be retrieved from the memory bank without recomputing the features each time. The drawback of course is the fact the representations in the memory becomes old after some time and therefore we need to compute it again.
+In order to achieve good results using many negative examples in the contrastive loss, CMC uses a memory bank to store latent representations for each training sample, so that a certain amount of negative samples can be retrieved from the memory bank without recomputing the features each time. The drawback of course is the fact the representations in the memory becomes old after some time and they must be updated after some time.
 
-In the experiments in order to build different views they convert the images from the RGB to the Lab representation, and then they split each image into L and ab channels. Of course L and ab from the same image are considered positive pairs. Then they do the same thing for the YDbDr color space, splitting the Y and DbDr channels. For testing the multi-views case they again use the Lab representation separating the L and ab channels, and they also include other three views depth, surface normal and semantic labels.
+In the experiments in order to produce different views of the images, they convert the images from the RGB to the Lab representation, and then they split each image into L and ab channels. Of course L and ab from the same image are considered positive pairs. They do the same thing for the YDbDr color space, splitting the Y and DbDr channels. For testing the multi-views case they again use the Lab representation separating the L and ab channels, and they also include other three views depth, surface normal and semantic labels (example in figure \ref{fig:cmc-views}).
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=10cm]{./images/cmc-views.png}
+	\caption{Example of depth, normal and semantic labels views of an image}
+	\label{fig:cmc-views}
+\end{figure}

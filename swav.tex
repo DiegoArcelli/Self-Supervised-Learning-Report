@@ -24,11 +24,11 @@ so we can train the parameters $\theta$ of the encoding function $f_\theta(\cdot
 \end{figure}
 The question now is how do we compute the codes? Given a batch of $B$ features $Z = [z_1, \dots, z_B]$ we want to map them to the prototypes $C= [C_1, \dots, C_K]$, obtaining the codes $Q = [q_1, \dots, q_B]$, where $Q$ is an $K\times B$ matrix where $Q_{i,j}$ can be viewed as the probability of feature $z_j$ to belong to the prototype $c_i$. We want to optimize $Q$ to maximize the similarity between features and prototypes, and this can be expressed in the following maximization problem:
 \[ \max_{Q \in \mathcal{Q}} \Big\{ \Tr(Q^TC^TZ) + \epsilon H (Q) \Big\}\]
-where $H(Q) = -\sum_i \sum_j Q_{i,j}\log Q_{i,j}$ and $\epsilon$ is a parameter that controls the smoothness of the mapping. The matrix $C^TZ$ contains the similarity of each feature vector and each prototype, since $(C^TZ)_{i,j} = c_i^Tz_j$, hence we can r
-\[ \Tr(Q^TC^TZ) =  \sum_{i=1}^B\sum_{j=1}^K q_{j,i}(c^T_jz_i) = \sum_{i=1}^B\sum_{j=1}^K q_{j,i}\Big(\sum_{t=1}^Dc_{j,t}z_{i,t}\Big) \]
-In doing this we need to be careful to avoid the trivial solution in which all the features are mapped to the same code. This can be achieved by imposing an equipartition constraint, which is basically saying that each . In order to enforce the equal partitioning constraint the set $\mathcal{Q}$ is defined as:
+where $H(Q) = -\sum_i \sum_j Q_{i,j}\log Q_{i,j}$ and $\epsilon$ is a parameter that controls the smoothness of the mapping. The matrix $C^TZ$ contains the similarity of each feature vector and each prototype, since $(C^TZ)_{i,j} = c_i^Tz_j$.
+%Hence we can r
+%\[ \Tr(Q^TC^TZ) =  \sum_{i=1}^B\sum_{j=1}^K q_{j,i}(c^T_jz_i) = \sum_{i=1}^B\sum_{j=1}^K q_{j,i}\Big(\sum_{t=1}^Dc_{j,t}z_{i,t}\Big) \]
+While solving the problem we need to avoid the trivial solution in which all the features are mapped to the same code. This can be achieved by imposing an equipartition constraint, which is basically saying that the number of feature vectors which are mapped to a given prototype has to be more or less the same for all the prototypes. In order to enforce the equal partitioning constraint the set $\mathcal{Q}$ is defined as:
 \[ \mathcal{Q} = \{Q \in \mathbb{R}^{K \times B} | Q1_B = \frac{1}{k}1_k, Q^T1_K = \frac{1}{B}1_B \} \]
-where $1_K$ denotes the $K$-dimensional vector where all the elements are 1. Once a continuous solution $Q^*$ to the optimization problem is found a discrete code can be obtained by using a rounding procedure. Empirically the authors found that a discrete codes doesn't work well in an online setting, using the discrete codes perform worse than using the continuous codes. Therefore the authors doesn't use rounding and the solution to the optimization problem can be computed as:
+where $1_K$ denotes the $K$-dimensional vector where all the elements are 1. The solution to the optimization problem can be computed as:
 \[ Q^* = \text{Diag}(u)\text{exp}\Big(\frac{C^TZ}{\epsilon}\Big)\text{Diag}(v) \]
-where $u$ and $v$ are re-normalization vectors in $\mathbb{R}^K$ and $\mathbb{R}^B$, which can be computed with the Sinkhorn-Knopp
-algorithm.
+where $u$ and $v$ are re-normalization vectors in $\mathbb{R}^K$ and $\mathbb{R}^B$, which can be computed with the Sinkhorn-Knopp algorithm.
