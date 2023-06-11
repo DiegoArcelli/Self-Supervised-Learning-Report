@@ -91,7 +91,7 @@ In table \ref{tab:object-detection-swav} we report the results of the SSL method
 	\centering
 	\begin{tabular}{l|ccc|}
 		\cline{2-4}
-		& \multicolumn{3}{c|}{VOC}                                                        \\ \cline{2-4} 
+		& \multicolumn{3}{c|}{VOC dataset}                                                        \\ \cline{2-4} 
 		& \multicolumn{1}{c|}{AP} & \multicolumn{1}{c|}{AP50} & \multicolumn{1}{c|}{AP75} \\ \hline
 		\multicolumn{1}{|l|}{Supervised} & 53.26                   & 81.51                     & 59.07                     \\ \cline{1-1}
 		\hline
@@ -105,6 +105,7 @@ In table \ref{tab:object-detection-swav} we report the results of the SSL method
 	\caption{Result after fine-tuning on 1\% of the data of ImageNet}
 	\label{tab:object-detection}
 \end{table}
+Here BYOL is the best performing model, while SWAV and SimCLR performs more or less similarly. Strangely MoCo performs much worse than those three models and it is more or less on the same level of PIRL, while in the previous tasks MoCo performed much better than PIRL.
 
 \begin{comment}
 \begin{table}[H]

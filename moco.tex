@@ -6,4 +6,4 @@ To address the problem of finding good negative samples MoCo maintains a queue o
 \[\theta_k \leftarrow m\theta_k + (1-m)\theta_q \]
 where $m \in [0,1)$. $\theta_q$ is normally updated using back-propagation. In this way $\theta_k$ evolves more smoothly than $\theta_q$. In this way even if the keys in the dictionary are encoded by different encoders, the difference between the encoders is now smaller.
 
-MoCo has been improved in a successive work \cite{chen2020simple} in which the authors applied to it some of the improvement proposed by SimCLR, which are a stronger data augmentation and the use of a MLP projection head instead of a linear layer for the fine-tuning, and they call this improved version MoCo-v2.
+MoCo has been improved in a successive work \cite{chen2020simple} in which the authors applied to it some of the improvement proposed by SimCLR, which are a stronger data augmentation and the use of a MLP projection head after having computed the representation of the image during the pre-training phase.
