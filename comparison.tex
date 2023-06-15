@@ -1,6 +1,6 @@
 In this section the five methods we have explained will be compared in term of performances on different downstream tasks. In addition two other methods which have been explored during the lectures will be considered, SimCLR \cite{chen2020simple} and BYOL \cite{grill2020bootstrap}. As we already said in the previous sections, the way in which we evaluate SSL methods is by evaluating how downstream tasks perform after the SSL phase. Of course the evaluation on the downstream task might depends by many factors: the chosen dataset, the network used for the encoding, the hyper-parameters used for the methods the type of augmentations applied and so on. In this section I tried to use the results taken from the papers of the considered methods, from survey \cite{technologies9010002} and from this paper \cite{ericsson2021well}. In order to have a fair comparison I tried to collect results when the methods have been compared with the same encoder, and I also compared the methods on different datasets.
 
-\noindent In table \ref{tab:imagenet-top1-5-acc-comp} we report the top-1 and top-5 accuracy of the considered methods when tested for classification on the ImageNet dataset and also the performances of a supervised model trained directly without SSL. All the methods uses as feature extractor a ResNet50 and the fine-tuning the SSL model is frozen and we train a linear classifier. PIRL, CPC are the two worst models while CMC does slightly better, SWAV and BYOL are by far the two best performing models, even if they do not reach the top-1 accuracy of the supervised model. MoCo and SimCLR are quite better than PIRL, CPC and CMP, but not as good as BYOL and SWAV.
+\noindent In table \ref{tab:imagenet-top1-5-acc-comp} we report the top-1 and top-5 accuracy of the considered methods when tested for classification on the ImageNet dataset and also the performances of a supervised model trained directly without SSL.  All the methods uses as feature extractor a ResNet50 which is frozen after the SSL phase, and for the classification we only train a linear classifier which uses as inputs the representations of the frozen ResNet50 (sadly for some model we don't have the top-5 accuracy). In term of performances PIRL and CPC are the two worst models, while CMC does slightly better. SWAV and BYOL are by far the two best performing models, even if they do not reach the top-1 accuracy of the supervised model. MoCo and SimCLR are quite better than PIRL, CPC and CMP, but not as good as BYOL and SWAV.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|cc|}
@@ -22,9 +22,7 @@ In this section the five methods we have explained will be compared in term of p
 	\caption{Accuracy of the SSL methods using linear probing for fine-tuning}
 	\label{tab:imagenet-top1-5-acc-comp}
 \end{table}
-
-
-Table \ref{tab:imagenet-1-perc-semisup} shows the performances of the methods in semi-supervised learning scenario. Basically after having performed the SSL phase we fine-tune the models using in one case the 1\% and in the other case the 10\% of the data. We report also different versions of the same model but using a different encoder. If we only look at the models that use the ResNet50 the raking of the model is the same that we obtained in the case of the linear probing. Here we can also see that the network used for the encoding can impact the performances, for instance CPCv2 with a ResNet161 encoder reaches an higher top-5 accuracy than SWAV and BYOL with a ResNet50.
+\noindent Table \ref{tab:imagenet-1-perc-semisup} shows the performances of the methods in a semi-supervised learning scenario. Basically after having performed the SSL phase we fine-tune the models using in one case the 1\% and in the other case the 10\% of the dataset. We report also different versions of the same model but using a different encoders. If we only look at the models that use the ResNet50 the raking of the model is the same that we obtained in the case of the linear probing. Here we can also see that the network used for the encoding has of course a big impact on the performances, for instance CPCv2 with a ResNet161 encoder reaches an higher top-5 accuracy than SWAV and BYOL with a ResNet50.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|cc|cc|}
@@ -45,8 +43,7 @@ Table \ref{tab:imagenet-1-perc-semisup} shows the performances of the methods in
 	\caption{Semi-supervised learning accuracy}
 	\label{tab:imagenet-1-perc-semisup}
 \end{table}
-For both tables the results are taken from the original papers of the methods, so the training conditions might be different.
-
+\noindent For both tables \ref{tab:imagenet-top1-5-acc-comp} and \ref{tab:imagenet-1-perc-semisup} the results are taken from the original papers of the methods, so the training conditions might be different.\\
 In tables \ref{tab:classification-multi-dataset-linear} and \ref{tab:classification-multi-dataset-finetune} we report the accuracy for image classification task of the considered methods on multiple datasets using the same encoder for every method (a ResNet50). In table \ref{tab:classification-multi-dataset-linear} the pre-trained feature extractor is kept frozen and the classification is performed using multinomial logistic regression, while in table \ref{tab:classification-multi-dataset-finetune} the whole architecture is fine-tuned with SGD, adding a MLP at the end of the encoder. In the right-most column we report the average accuracy across all the datasets. 
 \begin{table}[H]
 	\centering
@@ -83,46 +80,36 @@ In tables \ref{tab:classification-multi-dataset-linear} and \ref{tab:classificat
 	\caption{Result after fine-tuning on 1\% of the data of ImageNet}
 	\label{tab:classification-multi-dataset-finetune}
 \end{table}
-Even in these experiments in general SWAV performs slightly better than BYOL (even if in not all the datasets). SimCLR and MoCo have similar performances while PIRL performs significantly worse. In this cases for some datasets the performances of the best self-supervised datasets are even slightly better than those of the directly train models.
-
-In table \ref{tab:object-detection-swav} we report the results of the SSL methods using object detection as downstream task on the VOC dataset using network used for the encoding is a Faster R-CNN FPN.
-
+\noindent Even in these experiments in general SWAV performs slightly better than BYOL (even if in not all the datasets). SimCLR and MoCo have similar performances while PIRL performs significantly worse. In this cases for some datasets the performances of the best self-supervised datasets are even slightly better than those of the directly trained supervised models.\\
+Sadly for other tasks aside image classification I couldn't find a single dataset on which all the methods have been tested. Table \ref{tab:object-detection} shows the results of PIRL, MoCO-v2 and SWAV for an object detection task on the VOC07+12 dataset using a Faster R-CNN. Again PIRL is the worst model, while for two of the three metrics MoCo-v2 is a bit better than SWAV. In table \ref{tab:semantic-segmentation} we report the performances of MoCo, SimCLR and BYOL in a semantic segmentation task on the VOC2012 dataset using again a Faster R-CNN. BYOL again is the best model and SimCLR does a bit better than MoCo.
 \begin{table}[H]
-	\centering
-	\begin{tabular}{l|ccc|}
-		\cline{2-4}
-		& \multicolumn{3}{c|}{VOC dataset}                                                        \\ \cline{2-4} 
-		& \multicolumn{1}{c|}{AP} & \multicolumn{1}{c|}{AP50} & \multicolumn{1}{c|}{AP75} \\ \hline
-		\multicolumn{1}{|l|}{Supervised} & 53.26                   & 81.51                     & 59.07                     \\ \cline{1-1}
-		\hline
-		\multicolumn{1}{|l|}{PIRL}       & 45.08                   & 72.50                     & 47.80                     \\ \cline{1-1}
-		\multicolumn{1}{|l|}{SimCLR}     & 52.19                   & 81.36                     & 56.92                     \\ \cline{1-1}
-		\multicolumn{1}{|l|}{MoCo-v2}    & 44.74                   & 72.82                     & 47.01                     \\ \cline{1-1}
-		\multicolumn{1}{|l|}{BYOL}       & 54.91                   & 82.57                     & 60.82                     \\ \cline{1-1}
-		\multicolumn{1}{|l|}{SWAV}       & 52.07                   & 81.50                     & 56.03                     \\ \cline{1-1}
-		\hline
-	\end{tabular}
-	\caption{Result after fine-tuning on 1\% of the data of ImageNet}
-	\label{tab:object-detection}
+	\begin{minipage}{.5\linewidth}
+		\centering
+		\begin{tabular}{l|ccc|}
+			\cline{2-4} 
+			& \multicolumn{1}{c|}{AP} & \multicolumn{1}{c|}{$\text{AP}_{50}$} & \multicolumn{1}{c|}{$\text{AP}_{75}$} \\ \hline
+			\multicolumn{1}{|l|}{Supervised} & 53.5                   & 81.3                     & 58.8                     \\ \cline{1-1}
+			\hline
+			\multicolumn{1}{|l|}{PIRL}       & 54.0                  & 80.7                     & 59.7                     \\ \cline{1-1}
+			\multicolumn{1}{|l|}{MoCo-v2}    & 57.4                   & 82.5                     & 64.0                     \\ \cline{1-1}
+			\multicolumn{1}{|l|}{SWAV}       & 56.1                   & 82.6                     & 62.7                     \\ \cline{1-1}
+			\hline
+		\end{tabular}
+		\caption{Object detection VOC dataset}
+		\label{tab:object-detection}
+	\end{minipage}%
+	\begin{minipage}{.5\linewidth}
+		\centering
+		\begin{tabular}{l|cc|}
+			\cline{2-3}
+			& \multicolumn{1}{c|}{$\text{AP}_{50}$} & mIoU \\ \hline
+			\multicolumn{1}{|l|}{Supervised} & \multicolumn{1}{c|}{74.4} & 74.4 \\ \hline
+			\multicolumn{1}{|l|}{MoCo}       & \multicolumn{1}{c|}{74.9} & 72.5 \\ \cline{1-1}
+			\multicolumn{1}{|l|}{SimCLR}     & \multicolumn{1}{c|}{75.2} & 75.2 \\ 
+			\cline{1-1}
+			\multicolumn{1}{|l|}{BYOL}       & \multicolumn{1}{c|}{77.5} & 76.3 \\ \hline
+		\end{tabular}
+		\caption{Image segmentation VOC dataset}
+		\label{tab:semantic-segmentation}
+	\end{minipage}
 \end{table}
-Here BYOL is the best performing model, while SWAV and SimCLR performs more or less similarly. Strangely MoCo performs much worse than those three models and it is more or less on the same level of PIRL, while in the previous tasks MoCo performed much better than PIRL.
-
-\begin{comment}
-\begin{table}[H]
-	\centering
-	\begin{tabular}{l|ccc|ccc|}
-		\cline{2-7}
-		& \multicolumn{3}{c|}{VOC (frozen)} & \multicolumn{3}{c|}{VOC (finetune)} \\ \cline{2-7} 
-		& \multicolumn{1}{c}{AP} & \multicolumn{1}{c}{AP50} & \multicolumn{1}{c|}{AP75} & \multicolumn{1}{c}{AP} & \multicolumn{1}{c}{AP50} & \multicolumn{1}{c|}{AP75} \\ \hline
-		\multicolumn{1}{|l|}{Supervised} & 51.99 & 81.53 & 56.21 & 53.26 & 81.51 & 59.07 \\ \hline
-		\multicolumn{1}{|l|}{PIRL} & 49.54 & 77.26 & 52.79 & 45.08 & 72.50 & 47.80 \\ \cline{1-1}
-		\multicolumn{1}{|l|}{SimCLR} & 51.94 & 81.19 & 56.49 & 52.19 & 81.36 & 56.92 \\ \cline{1-1}
-		\multicolumn{1}{|l|}{MoCo-v2} & 54.22 & 81.86 & 59.97 & 44.74 & 72.82 & 47.01 \\ \cline{1-1}
-		\multicolumn{1}{|l|}{BYOL} & 53.32 & 82.01 & 58.37 & 54.91 & 82.57 & 60.82 \\ \cline{1-1}
-		\multicolumn{1}{|l|}{SWAV} & 50.68 & 80.82 & 54.11 & 52.07 & 81.50 & 56.03 \\ 
-		\hline
-	\end{tabular}
-	\caption{Result after fine-tuning on 1\% of the data of ImageNet}
-	\label{tab:object-detection-swav}
-\end{table}
-\end{comment}
